@@ -29,6 +29,7 @@ def data_decide_pq(df):
 #                  mainの処理                    #
 #################################################
 
+result = []
 for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]:
     TARGET_TYPE = i
 
@@ -56,4 +57,9 @@ for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.x
 
     lib.graph(y_train, y_test, y_train_pred, y_test_pred,
             "arma", TARGET_TYPE)
-    lib.mse(y_train, y_test, y_train_pred, y_test_pred)
+    
+    MSE_train, MSE_test = lib.mse(y_train, y_test, y_train_pred, y_test_pred)
+    result.append((MSE_train, MSE_test))
+
+for i in result:
+    print(i)

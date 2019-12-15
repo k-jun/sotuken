@@ -66,6 +66,6 @@ def graph(y_train, y_test, y_train_pred, y_test_pred, model_type, target_type):
 def mse(y_train, y_test, y_train_pred, y_test_pred):
     error_train = [y_train[i] - y_train_pred[i] for i in range(len(y_train))]
     error_test = [y_test[i] - y_test_pred[i] for i in range(len(y_test))]
-    MSE_train = np.array([e ** 2 for e in error_train]).mean()
-    MSE_test = np.array([e ** 2 for e in error_test]).mean()
-    print("MSE_train", MSE_train, "MSE_test", MSE_test)
+    MSE_train = np.array([e ** 2 * max(int(bool(e)), 0.1) for e in error_train]).mean()
+    MSE_test = np.array([e ** 2 * max(int(bool(e)), 0.1) for e in error_test]).mean()
+    return MSE_train, MSE_test
