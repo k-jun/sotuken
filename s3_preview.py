@@ -4,9 +4,9 @@ from datetime import date, datetime, timedelta
 import pandas as pd
 import numpy as np
 
-ZONE = "ap-northeast-1c"
+ZONE = "ap-northeast-1d"
 DATA_START_DATE = "2019-07-01"
-DATA_END_DATE = "2019-11-01"
+DATA_END_DATE = "2019-12-10"
 
 
 def columns(dates):
@@ -34,7 +34,6 @@ def data(dates, df):
 
 
 def main():
-    print("main処理")
     dates = pd.date_range(start=DATA_START_DATE, end=DATA_END_DATE)
     c = columns(dates.values)
     df = pd.DataFrame(columns=c)

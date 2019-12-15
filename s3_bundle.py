@@ -4,9 +4,9 @@ from datetime import date, datetime, timedelta
 import pandas as pd
 import numpy as np
 
-ZONE = "ap-northeast-1c"
+ZONE = "ap-northeast-1d"
 DATA_START_DATE = "2019-07-01"
-DATA_END_DATE = "2019-11-01"
+DATA_END_DATE = "2019-12-10"
 
 now = datetime.strptime(DATA_END_DATE, "%Y-%m-%d")
 
@@ -23,9 +23,9 @@ for i in range(len(dates)):
     with open(fileName) as f:
         data = json.load(f)
         for i in data:
-            if i["zone"] == ZONE:
+            if i["zone"] == ZONE and i["instance_type"] in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]:
                 df = df.append(i, ignore_index=True)
     current = current - timedelta(days=1)
 
 print(df.head())
-df.to_csv("./input/" + ZONE + ".csv", index=False)
+df.to_csv("./input/" + ZONE + "-20191213.csv", index=False)
