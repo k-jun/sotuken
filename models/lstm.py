@@ -54,7 +54,7 @@ def split_dataset(dataset, multi_step, history_size):
 
 def custom_loss(y_true, y_pred):
     # return tf.keras.losses.mean_absolute_error(y_true, y_pred)
-    return K.maximum(K.sign(y_true - y_pred), 0.01) * tf.keras.losses.mean_absolute_error(y_true, y_pred)
+    return K.maximum(K.sign(y_true - y_pred), 0.5) * tf.keras.losses.mean_absolute_error(y_true, y_pred)
 
 
 def create_model(input_shape):

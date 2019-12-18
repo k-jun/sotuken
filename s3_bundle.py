@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 ZONE = "ap-northeast-1c"
-DATA_START_DATE = "2019-11-10"
+DATA_START_DATE = "2019-07-01"
 DATA_END_DATE = "2019-12-10"
 
 now = datetime.strptime(DATA_END_DATE, "%Y-%m-%d")
@@ -28,4 +28,5 @@ for i in range(len(dates)):
     current = current - timedelta(days=1)
 
 print(df.head())
-df.to_csv("./input/" + ZONE + "-20191215.csv", index=False)
+df.to_csv("./input/" + ZONE + "-20191215-" +
+          DATA_END_DATE + ".csv", index=False)
