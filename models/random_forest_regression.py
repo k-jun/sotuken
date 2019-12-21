@@ -13,7 +13,7 @@ import lib
 # m3.large, m5.2xlarge, m5.large, m5.xlarge, r3.xlarge, r5d.xlarge
 TARGET_TYPE = "m5.2xlarge"
 DATA_PATH = "./input/ap-northeast-1c-20191213.csv"
-MULTI_STEP = 10
+MULTI_STEP = 4
 BATCH_SIZE = 32
 EPOCHS = 50
 PAST_HISTORY = 30
@@ -75,6 +75,7 @@ def predict_model(model, x_train, y_train, x_test, y_test, multi_step):
 #################################################
 
 
+result = []
 for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]:
     TARGET_TYPE = i
     df = lib.load_data(DATA_PATH, TARGET_TYPE)
@@ -104,4 +105,9 @@ for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.x
 
     lib.graph(y_train, y_test, y_train_pred, y_test_pred,
               "random_forest_regression", TARGET_TYPE)
-    lib.mse(y_train, y_test, y_train_pred, y_test_pred)
+    MSE_train, MSE_test = lib.mse(y_train, y_test, y_train_pred, y_test_pred)
+    result.append((MSE_train, MSE_test))
+
+
+for i in result:
+    print(i)

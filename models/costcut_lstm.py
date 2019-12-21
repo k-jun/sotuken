@@ -96,7 +96,7 @@ def predict_model(model, x_train, y_train, x_test, y_test, multi_step):
 result = []
 for date in ["2019-12-01", "2019-12-02", "2019-12-03", "2019-12-04", "2019-12-05", "2019-12-06", "2019-12-07", "2019-12-08", "2019-12-09", "2019-12-10"]:
 # for date in ["2019-12-01"]:
-    DATA_PATH = "./input/ap-northeast-1c-20191215-" + date + ".csv"
+    DATA_PATH = "./input/ap-northeast-1c-20191220-" + date + ".csv"
 
     df = lib.load_data(DATA_PATH, TARGET_TYPE)
     current_price = df["price"][-1] * 1.1
