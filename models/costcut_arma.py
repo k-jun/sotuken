@@ -58,7 +58,8 @@ for date in ["2019-12-01", "2019-12-02", "2019-12-03", "2019-12-04", "2019-12-05
             y_test = lib.denormalize(df_test["price"].values, std, mean)
             y_train_pred = lib.denormalize(arma_pred[:len(y_train)], std, mean)
             y_test_pred = lib.denormalize(arma_pred[len(y_train):], std, mean)
-            result.append((TARGET_TYPE, DATA_PATH, max(y_test) / max(y_test_pred)))
+            result.append(
+                (TARGET_TYPE, DATA_PATH, max(y_test), round(max(y_test_pred), 4), round(max(y_test) / max(y_test_pred), 4)))
         except:
             continue
 

@@ -21,6 +21,18 @@ def columns(dates):
     return a
 
 
+def zones(dates):
+    a = []
+    for d in dates:
+        fileName = "./s3/" + str(d)[:10] + ".json"
+        with open(fileName) as f:
+            data = json.load(f)
+            for i in data:
+                if not i["zone"] in a:
+                    a.append(i["zone"])
+    return a
+
+
 def data(dates, df):
     for d in dates:
         fileName = "./s3/" + str(d)[:10] + ".json"
@@ -36,10 +48,13 @@ def data(dates, df):
 def main():
     dates = pd.date_range(start=DATA_START_DATE, end=DATA_END_DATE)
     c = columns(dates.values)
-    df = pd.DataFrame(columns=c)
-    df = data(dates.values, df)
-
-    df.to_csv("./preview/" + ZONE + ".csv")
+    z = zones(dates)
+    print(c)
+    print(z)
+    # df = pd.DataFrame(columns=c)
+    # df = data(dates.values, df)
+    #
+    # df.to_csv("./preview/" + ZONE + ".csv")
 
 
 main()

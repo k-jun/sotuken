@@ -11,6 +11,8 @@ statsmodels = "*"
 scikit-learn = "*"
 boruta = "*"
 boto3 = "*"
+fbprophet = "*"
+lightgbm = "*"
 
 [requires]
 python_version = "3.7"
