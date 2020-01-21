@@ -34,6 +34,21 @@ def create_model(input_shape):
     lstm_model.summary()
     return lstm_model
 
+def predict_model(model, x_train, y_train, x_test, y_test, multi_step):
+    y_train_pred = []
+    y_test_pred = []
+
+    for i in x_train:
+        y_train_pred.append(model.predict(np.array([i]))[0])
+
+    # multi step predict
+    prev_input = list(x_test[0])
+    for i in range(multi_step):
+        latest_input = model.predict(np.array([prev_input]))[0]
+        y_test_pred.append(latest_input)
+        prev_input.append(latest_input)
+        prev_input.pop(0)
+    return y_train_pred, y_test_pred
 
 DATA_PATH = "./input/ap-northeast-1c_from_20190701_to_201912012019-12-01.csv"
 # m3.large, m5.2xlarge, m5.large, m5.xlarge, r3.xlarge, r5d.xlarge
@@ -55,10 +70,8 @@ result = []
 
 
 colors = ["red", "royalblue", "violet", "green", "cyan", "orange"]
-instance_types = ["m3.large", "m5.2xlarge",
-                  "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]
-feature_importance = []
-fig = plt.figure(figsize=(16, 9))
+# instance_types = ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]
+instance_types = ["m3.large"]
 
 for i in range(len(instance_types)):
     subfig = fig.add_subplot(2, 3, i+1)
@@ -85,25 +98,5 @@ for i in range(len(instance_types)):
     train_loss = hist.history['loss']
     val_loss = hist.history['val_loss']
 
-    # fig = plt.figure()
-    subfig.plot(range(len(train_loss)), train_loss, label='train_loss', color='blue')
-    subfig.plot(range(len(val_loss)), val_loss, label='val_loss', color='red')
-    subfig.set_xlabel("epochs")
-    subfig.set_ylabel("loss")
-    plt.legend(bbox_to_anchor=(1, 1), loc='upper right',
-    borderaxespad=1, fontsize=15)
-
-# fig.show()
-    # plt.scatter(y_test, y_pred, c=colors[i], label=TARGET_TYPE)
-
-# plt.plot([-2, 4], [-2, 4])
-# plt.xlabel('y_test')
-# plt.ylabel('y_pred')
-fig.tight_layout()
-fig.savefig("./output/lstm-learning.png")
-
 for i in result:
-    print(i)
-
-for i in feature_importance:
     print(i)
