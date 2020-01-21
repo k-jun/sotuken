@@ -18,11 +18,14 @@ RANDOM_STATE = 1221
 np.random.seed(RANDOM_STATE)
 rn.seed(RANDOM_STATE)
 
-
 result = []
-for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]:
-    # for i in ["m3.large"]:
-    TARGET_TYPE = i
+
+plt.figure(figsize=(10, 10))
+colors = ["red", "royalblue", "violet", "green", "cyan", "orange"]
+instance_types = ["m3.large", "m5.2xlarge",
+                  "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]
+for i in range(len(instance_types)):
+    TARGET_TYPE = instance_types[i]
     print("=" * 10, TARGET_TYPE, "=" * 10)
     df = lib.load_data(DATA_PATH, TARGET_TYPE)
 
@@ -38,15 +41,19 @@ for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.x
     # モデルで予測
     y_pred = model.predict(x_test)
 
-    print("r2_score", r2_score(y_pred, y_test))
-    print("rmse: ", np.sqrt(mean_squared_error(y_pred, y_test)))
+    a = {}
+    a["r2_score"] = r2_score(y_pred, y_test)
+    a["rmse"] = np.sqrt(mean_squared_error(y_pred, y_test))
+    result.append(a)
 
-    # 非正規化
-    # y_train = lib.denormalize(y_train, std, mean)
-    # y_test = lib.denormalize(y_test, std, mean)
-    # y_train_pred = lib.denormalize(y_train_pred, std, mean)
-    # y_test_pred = lib.denormalize(y_test_pred, std, mean)
+    plt.scatter(y_test, y_pred, c=colors[i], label=TARGET_TYPE)
 
-    fi = model.feature_importances_
-    for i in range(len(fi)):
-        print(columns[i], fi[i])
+plt.legend(bbox_to_anchor=(1, 0), loc='lower right',
+           borderaxespad=1, fontsize=15)
+plt.plot([-2, 4], [-2, 4])
+plt.xlabel('y_test')
+plt.ylabel('y_pred')
+plt.savefig("./output/lgbm.png")
+
+for i in result:
+    print(i)

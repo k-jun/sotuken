@@ -3,8 +3,9 @@ import random as rn
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import xgboost
+
 from sklearn.metrics import r2_score, mean_squared_error
+from sklearn import svm
 
 
 import lib
@@ -39,7 +40,7 @@ for i in range(len(instance_types)):
                                                                          PAST_HISTORY, TRAIN_RATIO)
 
     # モデルを定義
-    model = xgboost.XGBRegressor(n_estimators=100, random_state=RANDOM_STATE)
+    model = svm.SVR()
     # モデルを学習
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
@@ -56,7 +57,7 @@ plt.legend(bbox_to_anchor=(1, 0), loc='lower right',
 plt.plot([-2, 4], [-2, 4])
 plt.xlabel('y_test')
 plt.ylabel('y_pred')
-plt.savefig("./output/xgb.png")
+plt.savefig("./output/svm.png")
 
 for i in result:
     print(i)

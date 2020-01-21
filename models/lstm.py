@@ -52,9 +52,14 @@ tf.random.set_seed(RANDOM_STATE)
 
 
 result = []
-for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]:
+plt.figure(figsize=(10, 10))
+
+colors = ["red", "royalblue", "violet", "green", "cyan", "orange"]
+instance_types = ["m3.large", "m5.2xlarge",
+                  "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]
+for i in range(len(instance_types)):
     # for i in ["m3.large"]:
-    TARGET_TYPE = i
+    TARGET_TYPE = instance_types[i]
     print("=" * 10, TARGET_TYPE, "=" * 10)
 
     df = lib.load_data(DATA_PATH, TARGET_TYPE)
@@ -68,11 +73,13 @@ for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.x
     model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS,
               verbose=1, validation_data=(x_test, y_test))
     y_pred = model.predict(x_test)
-    a = {}
 
+    a = {}
     a["r2_score"] = r2_score(y_pred, y_test)
     a["rmse"] = np.sqrt(mean_squared_error(y_pred, y_test))
     result.append(a)
+
+    plt.scatter(y_test, y_pred, c=colors[i], label=TARGET_TYPE)
 
     # 非正規化
     # y_train = lib.denormalize(y_train, std, mean)
@@ -83,6 +90,12 @@ for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.x
     # fi = model.feature_importances_
     # for i in range(len(fi)):
     #     print(columns[i], fi[i])
+plt.legend(bbox_to_anchor=(1, 0), loc='lower right',
+           borderaxespad=1, fontsize=15)
+plt.plot([-2, 4], [-2, 4])
+plt.xlabel('y_test')
+plt.ylabel('y_pred')
+plt.savefig("./output/lstm.png")
 
 for i in result:
     print(i)

@@ -41,8 +41,8 @@ def denormalize(dataset, std, mean):
 
 def train_test_split(values, dates, history_size, train_ratio):
     columns = ["10days-ago", "9days-ago", "8days-ago", "7days-ago", "6days-ago",
-               "5days-ago", "4days-ago", "3days-ago", "2days-ago", "1days-ago",
-               "month", "dayofmonth", "hour", "dayofweek"
+               "5days-ago", "4days-ago", "3days-ago", "2days-ago", "1days-ago"
+               #    "month", "dayofmonth", "hour", "dayofweek"
                ]
 
     x_train = pd.DataFrame(columns=columns)
@@ -56,10 +56,10 @@ def train_test_split(values, dates, history_size, train_ratio):
         a = {}
         for j in range(1, history_size+1):
             a[str(j) + "days-ago"] = values[i - j]
-        a["month"] = dates[i].month
-        a["dayofmonth"] = dates[i].day
-        a["hour"] = dates[i].hour
-        a["dayofweek"] = dates[i].dayofweek
+        # a["month"] = dates[i].month
+        # a["dayofmonth"] = dates[i].day
+        # a["hour"] = dates[i].hour
+        # a["dayofweek"] = dates[i].dayofweek
         x_train = x_train.append(a, ignore_index=True)
         y_train.append(values[i])
 
@@ -67,10 +67,10 @@ def train_test_split(values, dates, history_size, train_ratio):
         a = {}
         for j in range(1, history_size+1):
             a[str(j) + "days-ago"] = values[i - j]
-        a["month"] = dates[i].month
-        a["dayofmonth"] = dates[i].day
-        a["hour"] = dates[i].hour
-        a["dayofweek"] = dates[i].dayofweek
+        # a["month"] = dates[i].month
+        # a["dayofmonth"] = dates[i].day
+        # a["hour"] = dates[i].hour
+        # a["dayofweek"] = dates[i].dayofweek
         x_test = x_test.append(a, ignore_index=True)
         y_test.append(values[i])
 

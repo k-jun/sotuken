@@ -27,18 +27,20 @@ rn.seed(RANDOM_STATE)
 
 
 result = []
-for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]:
+
+
+plt.figure(figsize=(10, 10))
+colors = ["red", "royalblue", "violet", "green", "cyan", "orange"]
+instance_types = ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]
+for i in range(len(instance_types)):
     # for i in ["m3.large"]:
-    TARGET_TYPE = i
+    TARGET_TYPE = instance_types[i]
     df = lib.load_data(DATA_PATH, TARGET_TYPE)
 
     # 正規化
     df, mean, std = lib.normalize(df)
-
-    df, mean, std = lib.normalize(df)
     (x_train, y_train), (x_test, y_test), columns = lib.train_test_split(df["price"].values, df.index,
                                                                          PAST_HISTORY, TRAIN_RATIO)
-
     # モデルを定義
     model = RandomForestRegressor(
         max_depth=5, random_state=RANDOM_STATE, n_estimators=100)
@@ -52,17 +54,15 @@ for i in ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.x
     a["rmse"] = np.sqrt(mean_squared_error(y_pred, y_test))
     result.append(a)
 
-    # 非正規化
-    # y_train = lib.denormalize(y_train, std, mean)
-    # y_test = lib.denormalize(y_test, std, mean)
-    # y_train_pred = lib.denormalize(y_train_pred, std, mean)
-    # y_test_pred = lib.denormalize(y_test_pred, std, mean)
+    plt.scatter(y_test, y_pred, c=colors[i], label=TARGET_TYPE)
 
-    # lib.graph(y_train, y_test, y_train_pred, y_test_pred,
-    #           "random_forest_regression", TARGET_TYPE, train_date, test_date)
-    # fi = model.feature_importances_
-    # for i in range(len(fi)):
-    #     print(columns[i], fi[i])
+plt.legend(bbox_to_anchor=(1, 0), loc='lower right',
+           borderaxespad=1, fontsize=20)
+plt.plot([-2, 4], [-2, 4])
+plt.xlabel('y_test')
+plt.ylabel('y_pred')
+plt.savefig("./output/rfr.png")
+
 
 for i in result:
     print(i)
