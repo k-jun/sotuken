@@ -48,7 +48,8 @@ for i in range(len(instance_types)):
     y_test = lib.denormalize(y_test, std, mean)
 
     a = {}
-    a["r2_score"] = r2_score(y_pred, y_test)
+    a["r2_score"] = 1 - ((1 - r2_score(y_pred, y_test)) *
+                         (len(y_pred) - 1) / (len(y_pred) - 10 - 1))
     a["rmse"] = np.sqrt(mean_squared_error(y_pred, y_test))
     result.append(a)
 

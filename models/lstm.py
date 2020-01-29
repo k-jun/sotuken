@@ -79,7 +79,8 @@ for i in range(len(instance_types)):
     a = {}
     y_pred = lib.denormalize(y_pred, std, mean)
     y_test = lib.denormalize(y_test, std, mean)
-    a["r2_score"] = r2_score(y_pred, y_test)
+    a["r2_score"] = 1 - ((1 - r2_score(y_pred, y_test)) *
+                         (len(y_pred) - 1) / (len(y_pred) - 10 - 1))
     a["rmse"] = np.sqrt(mean_squared_error(y_pred, y_test))
     result.append(a)
     subfig = fig.add_subplot(2, 3, i+1)
