@@ -76,27 +76,22 @@ for i in range(len(instance_types)):
                      verbose=1, validation_data=(x_test, y_test))
     y_pred = model.predict(x_test)
 
-    a = {}
-    y_pred = lib.denormalize(y_pred, std, mean)
-    y_test = lib.denormalize(y_test, std, mean)
-    a["r2_score"] = r2_score(y_pred, y_test)
-    a["rmse"] = np.sqrt(mean_squared_error(y_pred, y_test))
-    result.append(a)
+    train_loss = hist.history['loss']
+    val_loss = hist.history['val_loss']
     subfig = fig.add_subplot(2, 3, i+1)
     # subfig.plot(range(len(train_loss)), train_loss, label='train_loss', color='blue')
     # subfig.plot(range(len(val_loss)), val_loss, label='val_loss', color='red')
-    subfig.scatter(y_test, y_pred, c="black", label=TARGET_TYPE)
-    subfig.set_xlabel('y_test')
-    subfig.set_ylabel('y_pred')
-    subfig.plot([-2, 4], [-2, 4])
-    subfig.legend(bbox_to_anchor=(1, 0), loc='lower right',
+    subfig.plot(range(len(train_loss)), train_loss,
+                label='train_loss', color='black', linestyle="solid")
+    subfig.plot(range(len(val_loss)), val_loss, label='val_loss',
+                color='black', linestyle="dashed")
+    subfig.set_xlabel("epochs")
+    subfig.set_ylabel("loss")
+    subfig.legend(bbox_to_anchor=(1, 1), loc='upper right',
                   borderaxespad=1, fontsize=15)
 
-
-plt.legend(bbox_to_anchor=(1, 0), loc='lower right',
-           borderaxespad=1, fontsize=20)
+# plt.plot([-2, 4], [-2, 4])
+# plt.xlabel('y_test')
+# plt.ylabel('y_pred')
 fig.tight_layout()
-fig.savefig("./output/lstm.png")
-
-for i in result:
-    print(i)
+fig.savefig("./output/lstm_learninb.png")

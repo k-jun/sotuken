@@ -7,7 +7,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 import lib
 
-DATA_PATH = "./input/ap-northeast-1c_from_20190701_to_201912012019-12-01.csv"
+DATA_PATH = "./input/ap-northeast-1c_from_2019-07-01_to_2019-12-01.csv"
 # ref: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
 # m3.large, m5.2xlarge, m5.large, m5.xlarge, r3.xlarge, r5d.xlarge
 TARGET_TYPE = "m3.large"
@@ -29,9 +29,10 @@ rn.seed(RANDOM_STATE)
 result = []
 
 
-plt.figure(figsize=(10, 10))
+fig = plt.figure(figsize=(16, 9))
 colors = ["red", "royalblue", "violet", "green", "cyan", "orange"]
-instance_types = ["m3.large", "m5.2xlarge", "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]
+instance_types = ["m3.large", "m5.2xlarge",
+                  "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]
 for i in range(len(instance_types)):
     # for i in ["m3.large"]:
     TARGET_TYPE = instance_types[i]
@@ -48,20 +49,30 @@ for i in range(len(instance_types)):
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
 
+    y_pred = lib.denormalize(y_pred, std, mean)
+    y_test = lib.denormalize(y_test, std, mean)
+
     a = {}
 
     a["r2_score"] = r2_score(y_pred, y_test)
     a["rmse"] = np.sqrt(mean_squared_error(y_pred, y_test))
     result.append(a)
 
-    plt.scatter(y_test, y_pred, c=colors[i], label=TARGET_TYPE)
+    subfig = fig.add_subplot(2, 3, i+1)
+    subfig.scatter(y_test, y_pred, c="black", label=TARGET_TYPE)
+    subfig.set_xlabel('y_test')
+    subfig.set_ylabel('y_pred')
+    subfig.plot([-2, 4], [-2, 4])
+    subfig.legend(bbox_to_anchor=(1, 0), loc='lower right',
+                  borderaxespad=1, fontsize=15)
 
-plt.legend(bbox_to_anchor=(1, 0), loc='lower right',
-           borderaxespad=1, fontsize=20)
-plt.plot([-2, 4], [-2, 4])
-plt.xlabel('y_test')
-plt.ylabel('y_pred')
-plt.savefig("./output/rfr.png")
+# plt.legend(bbox_to_anchor=(1, 0), loc='lower right',
+#            borderaxespad=1, fontsize=20)
+# plt.plot([-2, 4], [-2, 4])
+# plt.xlabel('y_test')
+# plt.ylabel('y_pred')
+fig.tight_layout()
+fig.savefig("./output/rfr.png")
 
 
 for i in result:

@@ -16,8 +16,8 @@ import lib
 
 
 def custom_loss(y_true, y_pred):
-    return tf.keras.losses.mean_absolute_error(y_true, y_pred)
-    # return K.maximum(K.sign(y_true - y_pred), 0.01) * tf.keras.losses.mean_absolute_error(y_true, y_pred)
+    # return tf.keras.losses.mean_absolute_error(y_true, y_pred)
+    return K.maximum(K.sign(y_true - y_pred), 0.5) * tf.keras.losses.mean_absolute_error(y_true, y_pred)
 
 
 def create_model(input_shape):
@@ -68,7 +68,9 @@ np.random.seed(RANDOM_STATE)
 rn.seed(RANDOM_STATE)
 tf.random.set_seed(RANDOM_STATE)
 
-colors = ["red", "royalblue", "violet", "green", "cyan", "orange"]
+colors = ["#000000", "#222222", "#444444", "#666666", "#888888", "#aaaaaa"]
+makers = ["o", "v", "^", "*", "s", "p"]
+markerfacecolor = '#ffffff'
 plt.figure(figsize=(10, 10))
 instance_types = ["m3.large", "m5.2xlarge",
                   "m5.large", "m5.xlarge", "r3.xlarge", "r5d.xlarge"]
@@ -124,7 +126,8 @@ for it_index in range(len(instance_types)):
             gosas.append(round((pred[0] - true[0]) / true[0] * 100, 2))
             # 時間
             times.append(spans[i][j])
-    plt.scatter(times, gosas, c=colors[it_index], label=TARGET_TYPE)
+    plt.scatter(times, gosas, c=colors[it_index], facecolor=markerfacecolor,
+                label=TARGET_TYPE, marker=makers[it_index])
 
 plt.legend(bbox_to_anchor=(0, 1), loc='upper left',
            borderaxespad=1, fontsize=15)

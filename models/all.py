@@ -42,7 +42,7 @@ def create_model(input_shape):
     return lstm_model
 
 
-DATA_PATH = "./input/ap-northeast-1c_from_20190701_to_201912012019-12-01.csv"
+DATA_PATH = "./input/ap-northeast-1c_from_2019-07-01_to_2019-12-01.csv"
 # m3.large, m5.2xlarge, m5.large, m5.xlarge, r3.xlarge, r5d.xlarge
 
 TARGET_TYPE = "r5d.xlarge"
@@ -82,22 +82,22 @@ for i in range(len(instance_types)):
     lgbm = lightgbm.LGBMRegressor(n_estimators=100, random_state=RANDOM_STATE)
     svm = SVR()
     # モデルを学習
-    lstm.fit(x_train_lstm, y_train_lstm, batch_size=BATCH_SIZE, epochs=EPOCHS,
-              verbose=1, validation_data=(x_test_lstm, y_test_lstm))
+    # lstm.fit(x_train_lstm, y_train_lstm, batch_size=BATCH_SIZE, epochs=EPOCHS,
+    #           verbose=1, validation_data=(x_test_lstm, y_test_lstm))
     rfr.fit(x_train, y_train)
     xgb.fit(x_train, y_train)
     lgbm.fit(x_train, y_train)
     svm.fit(x_train, y_train)
 
     # モデルで予測
-    y_pred_lstm = lstm.predict(x_test_lstm)
+    # y_pred_lstm = lstm.predict(x_test_lstm)
     y_pred_rfr = rfr.predict(x_test)
     y_pred_xgb = xgb.predict(x_test)
     y_pred_lgbm = lgbm.predict(x_test)
     y_pred_svm = svm.predict(x_test)
 
     # 非正規化
-    y_pred_lstm = lib.denormalize(y_pred_lstm, std, mean)
+    # y_pred_lstm = lib.denormalize(y_pred_lstm, std, mean)
     y_pred_rfr = lib.denormalize(y_pred_rfr, std, mean)
     y_pred_xgb = lib.denormalize(y_pred_xgb, std, mean)
     y_pred_lgbm = lib.denormalize(y_pred_lgbm, std, mean)
@@ -110,14 +110,17 @@ for i in range(len(instance_types)):
     # x_index =  - len(y_pred_rfr)
     x_index = df.index[-len(y_test):]
 
-    plt.plot(x_index, y_test, color="black", label="actual")
-    plt.plot(x_index, y_pred_lstm, color="g", label="lstm predict")
-    plt.plot(x_index, y_pred_rfr, color="r", label="rfr predict")
-    plt.plot(x_index, y_pred_xgb, color="b", label="xgb predict")
-    plt.plot(x_index, y_pred_lgbm, color="purple", label="lgbm predict")
-    plt.plot(x_index, y_pred_svm, color="orange", label="svm predict")
-    plt.legend(bbox_to_anchor=(1, 1), loc='upper right', borderaxespad=1, fontsize=15)
-    plt.savefig("./output/all-" + TARGET_TYPE + ".png")
+    plt.plot(x_index, y_test, color="black", label="actual", linestyle="solid")
+    # plt.plot(x_index, y_pred_lstm, color="black", label="lstm", linestyle="dashed")
+    # plt.plot(x_index, y_pred_rfr, color="black", label="rfr", linestyle="dashdot")
+    plt.plot(x_index, y_pred_xgb, color="black", label="xgb", linestyle="dashed")
+    plt.plot(x_index, y_pred_lgbm, color="black", label="lgbm", linestyle="dashdot")
+    plt.plot(x_index, y_pred_svm, color="black", label="svm", linestyle="dotted")
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper right', borderaxespad=1, fontsize=25)
+    plt.xlabel('date', fontsize=18)
+    plt.ylabel('price', fontsize=18)
+    plt.tight_layout()
+    plt.savefig("./output/" + TARGET_TYPE + "2.png")
 
 for i in result:
     print(i)
