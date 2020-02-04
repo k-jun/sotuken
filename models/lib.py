@@ -103,3 +103,18 @@ def graph(y_train, y_test, y_train_pred, y_test_pred, model_type, target_type, t
     plt.title("model: " + model_type + " instance_type: " + target_type)
     plt.savefig("./output/" + model_type + "/" +
                 target_type + ".png")
+
+
+def r2_score(y_pred, y_true):
+    top = 0
+    for i in range(len(y_pred)):
+        a = y_pred[i]
+        b = y_true[i]
+        top += (a - b) ** 2
+
+    down = 0
+    for i in range(len(y_true)):
+        a = y_true[i]
+        avg = sum(y_true) / len(y_true)
+        down += (a - avg) ** 2
+    return 1 - (top / down)

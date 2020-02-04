@@ -44,12 +44,9 @@ for i in range(len(instance_types)):
     # モデルを学習
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
-    y_pred = lib.denormalize(y_pred, std, mean)
-    y_test = lib.denormalize(y_test, std, mean)
 
     a = {}
-    a["r2_score"] = 1 - ((1 - r2_score(y_pred, y_test)) *
-                         (len(y_pred) - 1) / (len(y_pred) - 10 - 1))
+    a["r2_score"] = lib.r2_score(y_pred, y_test)
     a["rmse"] = np.sqrt(mean_squared_error(y_pred, y_test))
     result.append(a)
 
